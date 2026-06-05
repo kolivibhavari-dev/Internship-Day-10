@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Handling DOM</title>
+</head>
+<body>
+
+    <h2 id="message">Click the button</h2>
+
+    <button id="btn">Click Me</button>
+
+    <script>
+        // Select the button
+        let button = document.getElementById("btn");
+
+        // Add event listener
+        button.addEventListener("mouseover", function() {
+            document.getElementById("message").innerHTML =
+                "Button hoverd Successfully!";
+        });
+    </script>
+
+</body>
+</html>
