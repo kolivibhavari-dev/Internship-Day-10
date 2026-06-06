@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Food Ordering System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+nav{
+    background:#ff5722;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:20px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    padding:20px;
+}
+
+.food-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.food-card{
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+
+.food-card:hover{
+    transform:scale(1.03);
+}
+
+.food-card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+.food-card h3{
+    padding:10px;
+}
+
+.food-card p{
+    padding:0 10px;
+}
+
+.food-card button{
+    margin:10px;
+    padding:10px;
+    border:none;
+    background:#ff5722;
+    color:white;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.cart-section{
+    margin-top:40px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+table th,table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+.qty-btn{
+    padding:5px 10px;
+    cursor:pointer;
+}
+
+#payment{
+    margin-top:30px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+}
+
+.place-order{
+    background:green;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    cursor:pointer;
+}
+
+#status{
+    margin-top:20px;
+    font-size:20px;
+    color:green;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+    nav{
+        flex-direction:column;
+        gap:10px;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <h2>🍔 FoodHub</h2>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Order Foods</a></li>
+        <li><a href="#">Cart</a></li>
+        <li><a href="#">Special Menu</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+<h2>Order Foods</h2>
+
+<div class="food-container" id="foodContainer"></div>
+
+<div class="cart-section">
+    <h2>🛒 Cart</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Food</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="cartItems"></tbody>
+    </table>
+
+    <h3 id="grandTotal">Total Amount: ₹0</h3>
+</div>
+
+<div id="payment">
+    <h2>Payment Gateway</h2>
+
+    <input type="text" placeholder="Enter Name">
+
+    <input type="text" placeholder="Mobile Number">
+
+    <input type="text" placeholder="Address">
+
+    <select>
+        <option>UPI</option>
+        <option>Card</option>
+        <option>Cash On Delivery</option>
+    </select>
+
+    <button class="place-order" onclick="placeOrder()">
+        Place Order
+    </button>
+
+    <div id="status"></div>
+</div>
+
+</div>
+
+<script>
+
+const foods = [
+{
+id:1,
+name:"Burger",
+image:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500",
+description:"Cheese Burger",
+price:120,
+rating:4.5
+},
+{
+id:2,
+name:"Pizza",
+image:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+description:"Veg Pizza",
+price:250,
+rating:4.8
+},
+{
+id:3,
+name:"Pasta",
+image:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500",
+description:"Italian Pasta",
+price:180,
+rating:4.3
+},
+{
+id:4,
+name:"Sandwich",
+image:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500",
+description:"Veg Sandwich",
+price:90,
+rating:4.2
+}
+];
+
+let cart = [];
+
+const foodContainer =
+document.getElementById("foodContainer");
+
+foods.forEach(food=>{
+foodContainer.innerHTML += `
+<div class="food-card">
+<img src="${food.image}">
+<h3>${food.name}</h3>
+<p>${food.description}</p>
+<p>⭐ ${food.rating}</p>
+<p><b>₹${food.price}</b></p>
+
+<button onclick="showDetails(${food.id})">
+View Details
+</button>
+
+<button onclick="addToCart(${food.id})">
+Add To Cart
+</button>
+</div>
+`;
+});
+
+function showDetails(id){
+
+const food = foods.find(item=>item.id===id);
+
+alert(
+`Name: ${food.name}
+Description: ${food.description}
+Price: ₹${food.price}
+Rating: ${food.rating}`
+);
+
+}
+
+function addToCart(id){
+
+const food =
+foods.find(item=>item.id===id);
+
+const existing =
+cart.find(item=>item.id===id);
+
+if(existing){
+existing.quantity++;
+}else{
+cart.push({...food,quantity:1});
+}
+
+renderCart();
+}
+
+function renderCart(){
+
+const cartItems =
+document.getElementById("cartItems");
+
+cartItems.innerHTML="";
+
+let total = 0;
+
+cart.forEach(item=>{
+
+let itemTotal =
+item.price * item.quantity;
+
+total += itemTotal;
+
+cartItems.innerHTML += `
+<tr>
+<td>${item.name}</td>
+
+<td>₹${item.price}</td>
+
+<td>
+<button class="qty-btn"
+onclick="changeQty(${item.id},-1)">
+-
+</button>
+
+${item.quantity}
+
+<button class="qty-btn"
+onclick="changeQty(${item.id},1)">
++
+</button>
+</td>
+
+<td>₹${itemTotal}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("grandTotal")
+.innerText =
+`Total Amount: ₹${total}`;
+
+}
+
+function changeQty(id,value){
+
+const item =
+cart.find(item=>item.id===id);
+
+item.quantity += value;
+
+if(item.quantity<=0){
+cart =
+cart.filter(food=>food.id!==id);
+}
+
+renderCart();
+}
+
+function processOrder(){
+
+return new Promise((resolve)=>{
+
+setTimeout(()=>{
+
+resolve(
+"✅ Order Confirmed"
+);
+
+},3000);
+
+});
+
+}
+
+async function placeOrder(){
+
+document.getElementById("status")
+.innerHTML =
+"⏳ Processing Order...";
+
+const result =
+await processOrder();
+
+const orderId =
+Math.floor(
+100000 + Math.random()*900000
+);
+
+document.getElementById("status")
+.innerHTML =
+`${result}<br>
+Order ID: #${orderId}`;
+
+}
+
+</script>
+
+</body>
+</html>

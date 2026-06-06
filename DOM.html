@@ -10,11 +10,10 @@
     <button id="btn">Click Me</button>
 
     <script>
-        // Select the button
         let button = document.getElementById("btn");
 
-        // Add event listener
         button.addEventListener("mouseover", function() {
+            alert("Button Clicked!");
             document.getElementById("message").innerHTML =
                 "Button hoverd Successfully!";
         });

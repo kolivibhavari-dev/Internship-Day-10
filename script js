@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Async Await Example</title>
+</head>
+<body>
+
+    <h2>Async/Await Demo</h2>
+    <button onclick="getData()">Get Data</button>
+    <p id="result"></p>
+
+    <script>
+        async function getData() {
+            let promise = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve("Data Loaded Successfully!");
+                }, 2000);
+            });
+
+            let result = await promise;
+
+            document.getElementById("result").innerHTML = result;
+        }
+    </script>
+
+</body>
+</html>
